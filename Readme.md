@@ -15,9 +15,9 @@ Syntax is generous - if it's valid JS fparts should parse the input properly.
 ---
 
 ```javascript
-const fparts = require('fparts');
+const {deconstruct} = require('fparts');
 
-var obj = fparts(function() {
+var obj = deconstruct(function() {
   return null;
 });
 
@@ -35,6 +35,35 @@ console.log(obj);
 ```
 npm i fparts --save
 ```
+
+## API
+
+### .deconstruct()
+
+**Arguments**
+
+func {Function}
+
+**Returns** {Object}
+
+```javascript
+{
+  name,
+  params,
+  body,
+  isAsync,
+  isGenerator,
+}
+```
+
+### .reconstruct()
+
+**Arguments**
+
+obj {Object} the parts object - result of `fparts.deconstruct()`
+
+**Returns** {Function}
+
 
 ## Performance
 @todo

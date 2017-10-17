@@ -2,13 +2,13 @@ const should = require('chai').should();
 const expect = require('chai').expect;
 const assert = require('chai').assert;
 
-const fparts = require('../lib');
+const {deconstruct, reconstruct} = require('../lib');
 
-describe('fparts', () => {
+describe('fparts.deconstruct()', () => {
 
   it('should deconstruct an anonmyous function (0)', () => {
     var func = () => {};
-    var obj = fparts(func);
+    var obj = deconstruct(func);
     expect(obj).to.eql({
       isGenerator: false,
       isAsync: false,
@@ -20,7 +20,7 @@ describe('fparts', () => {
 
   it('should deconstruct an anonmyous function (1)', () => {
     var func =  () => {console.log(1)};
-    var obj = fparts(func);
+    var obj = deconstruct(func);
     expect(obj).to.eql({
       isGenerator: false,
       isAsync: false,
@@ -32,7 +32,7 @@ describe('fparts', () => {
 
   it('should deconstruct an anonmyous function (2)', () => {
     var func = () => console.log(1);
-    var obj = fparts(func);
+    var obj = deconstruct(func);
     expect(obj).to.eql({
       isGenerator: false,
       isAsync: false,
@@ -44,7 +44,7 @@ describe('fparts', () => {
 
   it('should deconstruct an async function (0)', () => {
     var func = async () => console.log(1);
-    var obj = fparts(func);
+    var obj = deconstruct(func);
     expect(obj).to.eql({
       isGenerator: false,
       isAsync: true,
@@ -56,7 +56,7 @@ describe('fparts', () => {
 
   it('should deconstruct an async function (1)', () => {
     var func = async() => console.log(1);
-    var obj = fparts(func);
+    var obj = deconstruct(func);
     expect(obj).to.eql({
       isGenerator: false,
       isAsync: true,
@@ -68,7 +68,7 @@ describe('fparts', () => {
 
   it('should deconstruct an generator function (0)', () => {
     var func = function* () { console.log(1) };
-    var obj = fparts(func);
+    var obj = deconstruct(func);
     expect(obj).to.eql({
       isGenerator: true,
       isAsync: false,
@@ -80,7 +80,7 @@ describe('fparts', () => {
 
   it('should deconstruct an generator function (1)', () => {
     var func = function * () { console.log(1) };
-    var obj = fparts(func);
+    var obj = deconstruct(func);
     expect(obj).to.eql({
       isGenerator: true,
       isAsync: false,
@@ -92,8 +92,7 @@ describe('fparts', () => {
 
   it('should deconstruct an generator function (2)', () => {
     var func = function *() { console.log(1) };
-    var obj = fparts(func);
-    console.log(obj);
+    var obj = deconstruct(func);
     expect(obj).to.eql({
       isGenerator: true,
       isAsync: false,
@@ -105,7 +104,7 @@ describe('fparts', () => {
 
   it('should deconstruct an generator function (3)', () => {
     var func = function * aa() {function aaa() {return 2;}return aaa();};
-    var obj = fparts(func);
+    var obj = deconstruct(func);
     expect(obj).to.eql({
       isGenerator: true,
       isAsync: false,
@@ -115,14 +114,26 @@ describe('fparts', () => {
     });
   });
 
-  it('should should', () => {
-    var obj = fparts(function aa() {
-      function aaa() {
-        return 2;
+  it('should deconstruct a complex function (0)', async () => {
+    var func = async function (a, b = 2, c = () => 3) {
+      function aaa(a,b,c) {
+        return a + b + c;
       }
-      return aaa();
+      return aaa(a,b,c());
+    };
+
+    var obj = deconstruct(func);
+    expect(obj).to.eql({
+      isGenerator: false,
+      isAsync: true,
+      name: null,
+      params: 'a, b = 2, c = () => 3',
+      body: 'function aaa(a,b,c) {\n        return a + b + c;\n      }\n      return aaa(a,b,c());',
     });
-    console.log(obj);
+
+    var func1 = reconstruct(obj);
+    var result = await func1(1,2,() => 3);
+    result.should.eql(6);
   });
 
 });
