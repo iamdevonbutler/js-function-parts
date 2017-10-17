@@ -2,12 +2,13 @@ const should = require('chai').should();
 const expect = require('chai').expect;
 const assert = require('chai').assert;
 
-const parts = require('../lib');
+const fparts = require('../lib');
 
-describe('jsonf', () => {
+describe('fparts', () => {
 
   it('should deconstruct an anonmyous function (0)', () => {
-    var obj = parts( () => {} );
+    var func = () => {};
+    var obj = fparts(func);
     expect(obj).to.eql({
       isGenerator: false,
       isAsync: false,
@@ -18,7 +19,8 @@ describe('jsonf', () => {
   });
 
   it('should deconstruct an anonmyous function (1)', () => {
-    var obj = parts( () => {console.log(1)} );
+    var func =  () => {console.log(1)};
+    var obj = fparts(func);
     expect(obj).to.eql({
       isGenerator: false,
       isAsync: false,
@@ -29,7 +31,8 @@ describe('jsonf', () => {
   });
 
   it('should deconstruct an anonmyous function (2)', () => {
-    var obj = parts( () => console.log(1) );
+    var func = () => console.log(1);
+    var obj = fparts(func);
     expect(obj).to.eql({
       isGenerator: false,
       isAsync: false,
@@ -40,7 +43,8 @@ describe('jsonf', () => {
   });
 
   it('should deconstruct an async function (0)', () => {
-    var obj = parts( async () => console.log(1) );
+    var func = async () => console.log(1);
+    var obj = fparts(func);
     expect(obj).to.eql({
       isGenerator: false,
       isAsync: true,
@@ -51,7 +55,8 @@ describe('jsonf', () => {
   });
 
   it('should deconstruct an async function (1)', () => {
-    var obj = parts( async() => console.log(1) );
+    var func = async() => console.log(1);
+    var obj = fparts(func);
     expect(obj).to.eql({
       isGenerator: false,
       isAsync: true,
@@ -62,7 +67,8 @@ describe('jsonf', () => {
   });
 
   it('should deconstruct an generator function (0)', () => {
-    var obj = parts( function* () { console.log(1) } );
+    var func = function* () { console.log(1) };
+    var obj = fparts(func);
     expect(obj).to.eql({
       isGenerator: true,
       isAsync: false,
@@ -73,7 +79,8 @@ describe('jsonf', () => {
   });
 
   it('should deconstruct an generator function (1)', () => {
-    var obj = parts( function * () { console.log(1) } );
+    var func = function * () { console.log(1) };
+    var obj = fparts(func);
     expect(obj).to.eql({
       isGenerator: true,
       isAsync: false,
@@ -84,7 +91,9 @@ describe('jsonf', () => {
   });
 
   it('should deconstruct an generator function (2)', () => {
-    var obj = parts( function *() { console.log(1) } );
+    var func = function *() { console.log(1) };
+    var obj = fparts(func);
+    console.log(obj);
     expect(obj).to.eql({
       isGenerator: true,
       isAsync: false,
@@ -95,7 +104,8 @@ describe('jsonf', () => {
   });
 
   it('should deconstruct an generator function (3)', () => {
-    var obj = parts(function * aa() {function aaa() {return 2;}return aaa();});
+    var func = function * aa() {function aaa() {return 2;}return aaa();};
+    var obj = fparts(func);
     expect(obj).to.eql({
       isGenerator: true,
       isAsync: false,
@@ -106,7 +116,7 @@ describe('jsonf', () => {
   });
 
   it('should should', () => {
-    var obj = parts(function aa() {
+    var obj = fparts(function aa() {
       function aaa() {
         return 2;
       }
@@ -116,22 +126,3 @@ describe('jsonf', () => {
   });
 
 });
-
-// function type | async | generator | name | params | body
-
-// var trials = [];
-//
-// var types = [
-//   (isAsync) => {
-//     return `${isAsync ? 'async ' : ''}${}`;
-//   }
-// ];
-
-
-
-// describe(() => {
-//
-//
-//
-//
-// });
