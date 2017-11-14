@@ -14,5 +14,7 @@
     "microtime": "2.1.5",
     "mocha": "3.4.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "possibilities": "0.1.0"
+  }
 }
