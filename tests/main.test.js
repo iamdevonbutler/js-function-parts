@@ -1,4 +1,4 @@
-// @todo exclude tests where generators are async.
+// @todo test to see if u can pass in params
 const should = require('chai').should();
 const expect = require('chai').expect;
 const assert = require('chai').assert;
@@ -6,7 +6,6 @@ const assert = require('chai').assert;
 const Possibilities = require('possibilities');
 const {deconstruct, reconstruct} = require('../lib');
 
-// @rodo do we need to do it like this for async and generator???? async space???
 const async = [
   false,
   true,
@@ -25,12 +24,13 @@ const name = [
 
 const params = [
   null,
-  'a',
-  'a, b',
+  'a = 1, b = () => 2',
 ];
 
 const body = [
   'return 1;',
+  `function add(a, b) {return a + b;}; return add(a, b());`,
+  `var add = (a, b) => a + b; return add(a, b());`,
 ];
 
 describe('fparts', async () => {
@@ -42,6 +42,7 @@ describe('fparts', async () => {
     const [isAsync, isGenerator, name, params, body] = item;
 
     if (isGenerator && isAsync) return;
+    if (!params && body !== 'return 1;') return;
 
     func = reconstruct({
       isAsync,
@@ -51,8 +52,12 @@ describe('fparts', async () => {
       body,
     });
 
-    describeName = `${isAsync ? 'async ' : ''}function${isGenerator ? '*' : ''} ${name || ''}(${params || ''}) {${body}}`;
+    describeName = `${isAsync ? 'async ' : ''}function${isGenerator ? '*' : ''} ${name || ''}(${params || ''}) {
+      ${body}
+    }`;
+
     describe(describeName, () => {
+
       it ('should reconstruct correctly', done => {
         (async () => {
           if (isGenerator) {
@@ -65,10 +70,16 @@ describe('fparts', async () => {
           else {
             result = func();
           }
-          expect(result).to.eql(1);
+          if (body === 'return 1;') {
+            expect(result).to.eql(1);
+          }
+          else {
+            expect(result).to.eql(3);
+          }
           done();
         })();
       });
+
       it ('should deconstruct correctly', () => {
         obj = deconstruct(func);
         expect(obj).to.eql({
@@ -79,6 +90,7 @@ describe('fparts', async () => {
           body,
         });
       });
+
     });
 
   });

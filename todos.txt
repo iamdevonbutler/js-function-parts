@@ -2,3 +2,4 @@ put a class in as a func.
 test doing things in ctx
 test arrow func
 arrowfunc should be a obj param
+technically this doesnt test passing params, it uses param defaults.
