@@ -27,6 +27,11 @@ const params = [
   'a = 1, b = () => 2',
 ];
 
+const passParams = [
+  true,
+  false,
+];
+
 const body = [
   'return 1;',
   `function add(a, b) {return a + b;}; return add(a, b());`,
@@ -35,14 +40,18 @@ const body = [
 
 describe('fparts', async () => {
 
-  const matrix = new Possibilities(async, generator, name, params, body);
+  const matrix = new Possibilities(async, generator, name, params, passParams, body);
 
   matrix.forEach(item => {
     var result, func, describeName;
-    const [isAsync, isGenerator, name, params, body] = item;
+    const [isAsync, isGenerator, name, params, passParams, body] = item;
 
+    // Filters.
     if (isGenerator && isAsync) return;
     if (!params && body !== 'return 1;') return;
+    if (params && body === 'return 1;') return;
+    if (passParams && !params) return;
+    if (passParams && body === 'return 1;') return;
 
     func = reconstruct({
       isAsync,
@@ -52,7 +61,7 @@ describe('fparts', async () => {
       body,
     });
 
-    describeName = `${isAsync ? 'async ' : ''}function${isGenerator ? '*' : ''} ${name || ''}(${params || ''}) {
+    describeName = `(${passParams ? 'passed params' : 'default params'}) ${isAsync ? 'async ' : ''}function${isGenerator ? '*' : ''} ${name || ''}(${params || ''}) {
       ${body}
     }`;
 
@@ -61,21 +70,39 @@ describe('fparts', async () => {
       it ('should reconstruct correctly', done => {
         (async () => {
           if (isGenerator) {
-            let obj = func();
-            result = obj.next().value;
+            if (passParams) {
+              let obj = func(1, () => 2);
+              result = obj.next().value;
+            }
+            else {
+              let obj = func();
+              result = obj.next().value;
+            }
           }
           else if (isAsync) {
-            result = await func();
+            if (passParams) {
+              result = await func(1, () => 2);
+            }
+            else {
+              result = await func();
+            }
           }
           else {
-            result = func();
+            if (passParams) {
+              result = func(1, () => 2);
+            }
+            else {
+              result = func();
+            }
           }
+
           if (body === 'return 1;') {
             expect(result).to.eql(1);
           }
           else {
             expect(result).to.eql(3);
           }
+
           done();
         })();
       });
