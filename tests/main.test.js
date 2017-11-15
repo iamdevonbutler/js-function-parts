@@ -1,4 +1,5 @@
-// @todo test to see if u can pass in params
+'use strict';
+
 const should = require('chai').should();
 const expect = require('chai').expect;
 const assert = require('chai').assert;
@@ -27,31 +28,24 @@ const params = [
   'a = 1, b = () => 2',
 ];
 
-const passParams = [
-  true,
-  false,
-];
-
 const body = [
   'return 1;',
   `function add(a, b) {return a + b;}; return add(a, b());`,
   `var add = (a, b) => a + b; return add(a, b());`,
 ];
 
-describe('fparts', async () => {
+describe('fparts (dynamic)', async () => {
 
-  const matrix = new Possibilities(async, generator, name, params, passParams, body);
+  const matrix = new Possibilities(async, generator, name, params, body);
 
   matrix.forEach(item => {
     var result, func, describeName;
-    const [isAsync, isGenerator, name, params, passParams, body] = item;
+    const [isAsync, isGenerator, name, params, body] = item;
 
     // Filters.
     if (isGenerator && isAsync) return;
     if (!params && body !== 'return 1;') return;
     if (params && body === 'return 1;') return;
-    if (passParams && !params) return;
-    if (passParams && body === 'return 1;') return;
 
     func = reconstruct({
       isAsync,
@@ -61,41 +55,23 @@ describe('fparts', async () => {
       body,
     });
 
-    describeName = `(${passParams ? 'passed params' : 'default params'}) ${isAsync ? 'async ' : ''}function${isGenerator ? '*' : ''} ${name || ''}(${params || ''}) {
+    describeName = `${isAsync ? 'async ' : ''}function${isGenerator ? '*' : ''} ${name || ''}(${params || ''}) {
       ${body}
     }`;
 
     describe(describeName, () => {
-
       it ('should reconstruct correctly', done => {
-        (async () => {
+        (async () => { // @note wrapping necessary due to mocha error.
           if (isGenerator) {
-            if (passParams) {
-              let obj = func(1, () => 2);
-              result = obj.next().value;
-            }
-            else {
-              let obj = func();
-              result = obj.next().value;
-            }
+            let obj = func();
+            result = obj.next().value;
           }
           else if (isAsync) {
-            if (passParams) {
-              result = await func(1, () => 2);
-            }
-            else {
-              result = await func();
-            }
+            result = await func();
           }
           else {
-            if (passParams) {
-              result = func(1, () => 2);
-            }
-            else {
-              result = func();
-            }
+            result = func();
           }
-
           if (body === 'return 1;') {
             expect(result).to.eql(1);
           }
@@ -108,17 +84,41 @@ describe('fparts', async () => {
       });
 
       it ('should deconstruct correctly', () => {
-        obj = deconstruct(func);
+        let obj = deconstruct(func);
         expect(obj).to.eql({
           isGenerator,
           isAsync,
+          isArrowFunc: false,
           name,
           params,
           body,
         });
       });
-
     });
 
+  });
+});
+
+describe ('fparts (custom)', () => {
+  it ('should work w/ passed params rather than defaults', () => {
+    let func = reconstruct({
+      isAsync: false,
+      isGenerator: false,
+      name: null,
+      params: 'a,b',
+      body: 'return a+b;',
+    });
+    func(1,1).should.eql(2);
+  });
+  it ('should deconstruct an arrow func', () => {
+    let obj = deconstruct(() => 1);
+    expect(obj).to.eql({
+      isGenerator: false,
+      isAsync: false,
+      isArrowFunc: true,
+      name: null,
+      params: null,
+      body: '1',
+    });
   });
 });
