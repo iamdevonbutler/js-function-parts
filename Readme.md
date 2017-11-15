@@ -1,6 +1,6 @@
 # fparts
 
-low-level function parser optimized for performance.
+1) low-level function parser optimized for performance.
 
 *Deconstruct* JS functions into objects containing:
 
@@ -13,7 +13,7 @@ low-level function parser optimized for performance.
 
 Syntax is generous - if it's valid JS, fparts should parse the input properly.
 
-*Reconstruct* objects into functions.
+2) *Reconstruct* objects into functions.
 
 *We can `deconstruct` arrow functions and provide the metadata to identify it as such,
 but we cannot create an arrow function via the `reconstruct` method. Why? Arrow functions
@@ -54,13 +54,15 @@ npm i fparts --save
 
 **Arguments**
 
-func {Function}
+- func {Function}
 
 **Returns** {Object}
 
 ```javascript
 var obj = deconstruct(function() {});
-obj === {
+console.log(obj);
+/*
+{
   isAsync: false,
   isGenerator: false,
   isArrowFunc: false,
@@ -68,13 +70,14 @@ obj === {
   params: null,
   body: null,
 }
+*/
 ```
 
 ### .reconstruct()
 
 **Arguments**
 
-obj {Object} the parts object
+- obj {Object} a parts object
 
 **Returns** {Function}
 
@@ -87,7 +90,6 @@ var func = reconstruct({
   body: 'return 1;',
 });
 ```
-
 
 ## Performance
 
