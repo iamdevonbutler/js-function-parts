@@ -1,4 +1,4 @@
-# fparts
+# fparts [![Build Status](https://travis-ci.org/iamdevonbutler/fparts.svg?branch=master)](https://travis-ci.org/iamdevonbutler/fparts)
 
 1) low-level function parser optimized for performance.
 
@@ -19,6 +19,8 @@ Syntax is generous - if it's valid JS, fparts should parse the input properly.
 but we cannot create an arrow function via the `reconstruct` method. Why? Arrow functions
 inherit context from the environment in which it's defined, and since that context exists
 outside your codebase, context for arrow functions becomes meaningless.*
+
+*engines: node >= 8.x*
 
 ---
 
