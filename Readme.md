@@ -1,8 +1,8 @@
 # fparts [![Build Status](https://travis-ci.org/iamdevonbutler/fparts.svg?branch=master)](https://travis-ci.org/iamdevonbutler/fparts)
 
-1) low-level function parser optimized for performance.
+low-level function parser optimized for performance.
 
-*Deconstruct* JS functions into objects containing:
+`.deconstruct()` JS functions into objects containing:
 
 - isAsync
 - isGenerator
@@ -11,16 +11,16 @@
 - params
 - body
 
-Syntax is generous - if it's valid JS, fparts should parse the input properly.
+*Syntax is generous - if it's valid JS, fparts should parse the input properly.*
 
-2) *Reconstruct* objects into functions.
+`.reconstruct()` objects into functions.
 
 *We can `deconstruct` arrow functions and provide the metadata to identify it as such,
 but we cannot create an arrow function via the `reconstruct` method. Why? Arrow functions
 inherit context from the environment in which it's defined, and since that context exists
 outside your codebase, context for arrow functions becomes meaningless.*
 
-*engines: node >= 8.x*
+**engines: node >= 8.x**
 
 ---
 
@@ -92,9 +92,6 @@ var func = reconstruct({
   body: 'return 1;',
 });
 ```
-
-## Performance
-
 
 ## License
 MIT
