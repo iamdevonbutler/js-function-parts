@@ -2,31 +2,43 @@
 
 low-level function parser optimized for performance.
 
-Parse JS functions into objects containing:
+*Deconstruct* JS functions into objects containing:
 
+- isAsync
+- isGenerator
+- isArrowFunc
 - name
 - params
 - body
-- isAsync
-- isGenerator
 
-Syntax is generous - if it's valid JS fparts should parse the input properly.
+Syntax is generous - if it's valid JS, fparts should parse the input properly.
+
+*Reconstruct* objects into functions.
+
+*We can `deconstruct` arrow functions and provide the metadata to identify it as such,
+but we cannot create an arrow function via the `reconstruct` method. Why? Arrow functions
+inherit context from the environment in which it's defined, and since that context exists
+outside your codebase, context for arrow functions becomes meaningless.*
 
 ---
 
 ```javascript
-const {deconstruct} = require('fparts');
+const {deconstruct, reconstruct} = require('fparts');
 
 var obj = deconstruct(function() {
   return null;
 });
 
 console.log(obj);
+// obj.isAsync = false
+// obj.isGenerator = false
+// obj.isArrowFunc = false
 // obj.name = null
 // obj.params = null
 // obj.body = 'return null;'
-// obj.isAsync = false
-// obj.isGenerator = false
+
+var func = reconstruct(obj);
+func(); // returns null.
 
 ```
 
@@ -47,12 +59,14 @@ func {Function}
 **Returns** {Object}
 
 ```javascript
-{
-  name,
-  params,
-  body,
-  isAsync,
-  isGenerator,
+var obj = deconstruct(function() {});
+obj === {
+  isAsync: false,
+  isGenerator: false,
+  isArrowFunc: false,
+  name: null,
+  params: null,
+  body: null,
 }
 ```
 
@@ -60,13 +74,23 @@ func {Function}
 
 **Arguments**
 
-obj {Object} the parts object - result of `fparts.deconstruct()`
+obj {Object} the parts object
 
 **Returns** {Function}
 
+```javascript
+var func = reconstruct({
+  isAsync: false,
+  isGenerator: false,
+  name: 'name',
+  params: 'a, b',
+  body: 'return 1;',
+});
+```
+
 
 ## Performance
-@todo
+
 
 ## License
 MIT
