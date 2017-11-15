@@ -12,9 +12,7 @@
   "devDependencies": {
     "chai": "4.0.2",
     "microtime": "2.1.5",
-    "mocha": "3.4.2"
-  },
-  "dependencies": {
+    "mocha": "3.4.2",
     "possibilities": "0.1.0"
   },
   "engines": {
