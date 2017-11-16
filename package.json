@@ -1,6 +1,6 @@
 {
   "name": "fparts",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Deconstruct JS functions into individual components and reconstruct from data.",
   "main": "lib/index.js",
   "scripts": {
