@@ -1,7 +1,7 @@
 {
   "name": "fparts",
   "version": "0.1.0",
-  "description": "Deconstruct JS functions into individual components",
+  "description": "Deconstruct JS functions into individual components and reconstruct from data.",
   "main": "lib/index.js",
   "scripts": {
     "test": "NODE_ENV=test ./node_modules/mocha/bin/mocha --harmony --reporter spec --ui bdd --bail --colors ./tests/**/*.test.js",
