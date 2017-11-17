@@ -1,0 +1,4 @@
+We can `deconstruct` arrow functions and provide the metadata to identify it as such,
+but we cannot create an arrow function via the `reconstruct` method. Why? Arrow functions
+inherit context from the environment in which it's defined, and since that context exists
+outside your codebase, context for arrow functions becomes meaningless.

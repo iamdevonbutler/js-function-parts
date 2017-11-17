@@ -1,5 +1,9 @@
 'use strict';
 
+// @todo tesrt to make sure it errors when we try to create a arrow generator.
+// @todo how does it parse arrow functs w/o braces/
+// @todo might want to leave body spacing the same.
+
 const should = require('chai').should();
 const expect = require('chai').expect;
 const assert = require('chai').assert;
@@ -26,6 +30,7 @@ const name = [
 const params = [
   null,
   'a = 1, b = () => 2',
+  'a = 1, b = function() {return 2;}',
 ];
 
 const body = [
@@ -60,8 +65,7 @@ describe('fparts (dynamic)', async () => {
     }`;
 
     describe(describeName, () => {
-      it ('should reconstruct correctly', done => {
-        (async () => { // @note wrapping necessary due to mocha error.
+      it ('should reconstruct correctly', async () => {
           if (isGenerator) {
             let obj = func();
             result = obj.next().value;
@@ -78,9 +82,6 @@ describe('fparts (dynamic)', async () => {
           else {
             expect(result).to.eql(3);
           }
-
-          done();
-        })();
       });
 
       it ('should deconstruct correctly', () => {

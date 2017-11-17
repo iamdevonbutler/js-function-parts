@@ -4,6 +4,9 @@ low-level function parser optimized for performance.
 
 `.deconstruct()` JS functions into objects containing:
 
+`.reconstruct()` objects into functions.
+
+ **Params**
 - isAsync
 - isGenerator
 - isArrowFunc
@@ -12,13 +15,6 @@ low-level function parser optimized for performance.
 - body
 
 *Syntax is generous - if it's valid JS, fparts should parse the input properly.*
-
-`.reconstruct()` objects into functions.
-
-*We can `deconstruct` arrow functions and provide the metadata to identify it as such,
-but we cannot create an arrow function via the `reconstruct` method. Why? Arrow functions
-inherit context from the environment in which it's defined, and since that context exists
-outside your codebase, context for arrow functions becomes meaningless.*
 
 **engines: node >= 8.x**
 
