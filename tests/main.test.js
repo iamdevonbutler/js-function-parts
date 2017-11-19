@@ -1,9 +1,5 @@
 'use strict';
 
-// @todo tesrt to make sure it errors when we try to create a arrow generator.
-// @todo how does it parse arrow functs w/o braces/
-// @todo might want to leave body spacing the same.
-
 const should = require('chai').should();
 const expect = require('chai').expect;
 const assert = require('chai').assert;
@@ -44,7 +40,7 @@ describe('fparts (dynamic)', async () => {
   const matrix = new Possibilities(async, generator, name, params, body);
 
   matrix.forEach(item => {
-    var result, func, describeName;
+    var result, result1, func, describeName;
     const [isAsync, isGenerator, name, params, body] = item;
 
     // Filters.
@@ -66,21 +62,25 @@ describe('fparts (dynamic)', async () => {
 
     describe(describeName, () => {
       it ('should reconstruct correctly', async () => {
+          let funcArg = () => 2;
           if (isGenerator) {
-            let obj = func();
-            result = obj.next().value;
+            result = func().next().value;
+            result1 = func(1, funcArg).next().value;
           }
           else if (isAsync) {
             result = await func();
+            result1 = await func(1, funcArg);
           }
           else {
             result = func();
+            result1 = func(1, funcArg);
           }
           if (body === 'return 1;') {
             expect(result).to.eql(1);
           }
           else {
             expect(result).to.eql(3);
+            expect(result1).to.eql(3);
           }
       });
 
@@ -101,25 +101,20 @@ describe('fparts (dynamic)', async () => {
 });
 
 describe ('fparts (custom)', () => {
-  it ('should work w/ passed params rather than defaults', () => {
-    let func = reconstruct({
-      isAsync: false,
-      isGenerator: false,
-      name: null,
-      params: 'a,b',
-      body: 'return a+b;',
-    });
-    func(1,1).should.eql(2);
-  });
-  it ('should deconstruct an arrow func', () => {
-    let obj = deconstruct(() => 1);
+  let obj = deconstruct(() => 1);
+  it ('should deconstruct an arrow func without braces', () => {
     expect(obj).to.eql({
       isGenerator: false,
       isAsync: false,
       isArrowFunc: true,
       name: null,
       params: null,
-      body: '1',
+      body: 'return 1',
     });
+  });
+
+  let func = reconstruct(obj);
+  it ('should reconstruct an arrow func without braces', () => {
+    expect(func()).to.eql(1);
   });
 });

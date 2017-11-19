@@ -18,25 +18,23 @@ low-level function parser optimized for performance.
 
 **engines: node >= 8.x**
 
----
+## Example
 
 ```javascript
 const {deconstruct, reconstruct} = require('fparts');
 
-var obj = deconstruct(function() {
-  return null;
-});
+var obj = deconstruct(function() {return null;});
 
 console.log(obj);
 // obj.isAsync = false
 // obj.isGenerator = false
-// obj.isArrowFunc = false
+// obj.isArrowFunc = true
 // obj.name = null
 // obj.params = null
 // obj.body = 'return null;'
 
 var func = reconstruct(obj);
-func(); // returns null.
+func(); // returns `null`.
 
 ```
 

@@ -1,1 +1,4 @@
 perf testing
+
+/// this doesnt test functions like this:
+/// function  *() {} // multiple spaces after func
