@@ -1,5 +1,5 @@
 {
-  "name": "fparts",
+  "name": "js-function-parts",
   "version": "0.4.0",
   "description": "Deconstruct JS functions into individual components and reconstruct from data.",
   "main": "lib/index.js",
@@ -20,6 +20,6 @@
   },
   "repository": {
     "type" : "git",
-    "url" : "https://github.com/iamdevonbutler/fparts"
+    "url" : "https://github.com/iamdevonbutler/js-function-parts"
   }
 }

@@ -35,7 +35,7 @@ const body = [
   `var add = (a, b) => a + b; return add(a, b());`,
 ];
 
-describe('fparts (dynamic)', async () => {
+describe('js-function-parts (dynamic)', async () => {
 
   const matrix = new Possibilities(async, generator, name, params, body);
 
@@ -100,7 +100,7 @@ describe('fparts (dynamic)', async () => {
   });
 });
 
-describe ('fparts (custom)', () => {
+describe ('js-function-parts (custom)', () => {
   let obj = deconstruct(() => 1);
   it ('should deconstruct an arrow func without braces', () => {
     expect(obj).to.eql({

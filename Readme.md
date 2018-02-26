@@ -1,4 +1,4 @@
-# fparts [![Build Status](https://travis-ci.org/iamdevonbutler/fparts.svg?branch=master)](https://travis-ci.org/iamdevonbutler/fparts)
+# js-function-parts [![Build Status](https://travis-ci.org/iamdevonbutler/js-function-parts.svg?branch=master)](https://travis-ci.org/iamdevonbutler/js-function-parts)
 
 low-level function parser optimized for performance.
 
@@ -14,14 +14,14 @@ low-level function parser optimized for performance.
 - params
 - body
 
-*Syntax is generous - if it's valid JS, fparts should parse the input properly.*
+*Syntax is generous - if it's valid JS, js-function-parts should parse the input properly.*
 
 **engines: node >= 8.x**
 
 ## Example
 
 ```javascript
-const {deconstruct, reconstruct} = require('fparts');
+const {deconstruct, reconstruct} = require('js-function-parts');
 
 var obj = deconstruct(function() {return null;});
 
@@ -40,7 +40,7 @@ func(); // returns `null`.
 ## Installation
 
 ```
-npm i fparts --save
+npm i js-function-parts --save
 ```
 
 ## API
