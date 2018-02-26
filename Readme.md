@@ -35,7 +35,6 @@ console.log(obj);
 
 var func = reconstruct(obj);
 func(); // returns `null`.
-
 ```
 
 ## Installation

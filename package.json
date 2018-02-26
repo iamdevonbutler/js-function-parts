@@ -16,7 +16,7 @@
     "possibilities": "0.1.0"
   },
   "engines": {
-    "node": ">= 8.0.0"
+    "node": ">=8.0.0"
   },
   "repository": {
     "type" : "git",
